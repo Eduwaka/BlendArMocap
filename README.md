@@ -1,71 +1,67 @@
-# BlendArMocap <br>
+# BlendArMocap (Community Fork)
 
-BlendArMocap is a tool preform markerless tracking within Blender using Google’s [Mediapipe](https://google.github.io/mediapipe/). The main goal of the add-on is to efficiently transfer the generated detection results to rigs.<br>
+> **This is a community-maintained fork of the original BlendArMocap by Denys Hsu (cgtinker).**
+>
+> The original author discontinued the project, and we at [Eduwaka](https://github.com/Eduwaka) have forked it to ensure its powerful capabilities remain available and continue to evolve. Our goal is to maintain this tool for our internal animation pipeline and for the benefit of the entire Blender community.
+>
+> We recognize we may not be the only active home for this project. We are enthusiastic about collaborating with other developers and forks to merge improvements and bring this amazing tool to its full potential.
+>
+> [Original Repository Link](https://github.com/cgtinker/BlendArMocap)
 
-For more information, please refer to the [documentation](https://cgtinker.github.io/BlendArMocap/).
+BlendArMocap is a Blender addon that enables real-time, markerless motion capture using Google’s [MediaPipe](https://google.github.io/mediapipe/) framework. The primary goal of the addon is to efficiently capture human motion from a webcam or video file and transfer it to a character rig inside Blender.
 
-# Discontinued
-I cannot activly maintain BlendArMocap anymore, I may accept PR's and consider to transfer the ownership if someone plans to activly maintain it.
+For more detailed information, please refer to the original [documentation](https://cgtinker.github.io/BlendArMocap/), which we aim to update over time.
 
 ### Features
-- Detection of [Mediapipe](https://google.github.io/mediapipe/) detection results in stream or video
-    - Calculation of rotations for mediapipe data
-- Import of [Freemocap](https://freemocap.org) mediapipe session data
-- Transfer tracking data to rigs and generate new transfer configurations
-  - currently, officially supports the transfer to generated [rifigy rigs](https://docs.blender.org/manual/en/latest/addons/rigging/rigify/index.html)
+- Real-time pose, hand, and face tracking directly within Blender's viewport using MediaPipe.
+- Calculation of bone rotations at runtime to drive character rigs.
+- Import functionality for session data from the [Freemocap](https://freemocap.org) project.
+- A flexible transfer system to map motion capture data to different character rigs.
+- Official out-of-the-box support for Blender's standard [Rigify](https://docs.blender.org/manual/en/latest/addons/rigging/rigify/index.html) rigs.
 
+---
+### Getting Started
 
-### Mediapipe Detection
+#### 1. Installation
+Install the addon from the `.zip` file in Blender's preferences (`Edit > Preferences > Add-ons > Install`).
 
-Run Mediapipe within Blender to detect pose, hand, face or holistic features.
-BlendArMocap calculates rotation data based on the detection results at runtime to drive rigs.<br>
+#### 2. Installing Dependencies
+**Caution:** This addon requires external Python libraries (`mediapipe`, `opencv-python`, `numpy`).
+- After enabling the addon, a panel will appear in its preferences.
+- Click the `Install Dependencies` button to attempt an automatic installation.
+- **This may require you to run Blender with administrator/elevated privileges.**
+- If the automatic installation fails, you may need to install the dependencies manually into Blender's Python environment. This is often the first "Frankenstein" step in getting a complex tool like this integrated into your pipeline.
 
-**Caution:** Requires external dependencies which can be installed via the add-on preferences with elevated privileges.
+### How It Works
 
+#### MediaPipe Detection
+Run MediaPipe within Blender to detect pose, hand, and face landmarks from a webcam stream or a pre-recorded video. BlendArMocap generates a control rig of "Empty" objects in real-time that mirror the detected motion.
 
-### Freemocap import
+#### Freemocap Import
+Import mocap data saved from a [Freemocap](https://freemocap.org) session. Simply point the addon to the session directory and click the import button.
 
-[Freemocap](https://freemocap.org) session data can be saved in a `session folder` which then can be imported using BlendArMocap.
-To import session data to blender, set the path to the session directory and press the import button.
+#### Transfer to Your Rig
+The power of this tool lies in its retargeting system. While it works with Rigify rigs by default, you can make it work with *any* rig (like our Edubot mascot!).
+1.  The addon generates mapping objects (e.g., in a collection named `cgt_HANDS`).
+2.  You use Blender's native **Constraints** (`Copy Location`, `Copy Rotation`) to link your own character rig's bones or IK targets to these mapping objects.
+3.  You can save these new mappings as a reusable configuration for your character.
 
+---
+### Our Vision and How to Contribute
+Our immediate goals are to ensure stability and maintain compatibility with modern versions of Blender. We encourage community contributions to help us:
+- Fix bugs and improve performance.
+- Create and share new rig configurations.
+- Update documentation.
 
-### Transfer
+The best way to contribute is by opening an **Issue** to report a bug or suggest a feature, or by submitting a **Pull Request** with your proposed improvements.
 
-Currently there's a preset configuration to transfer detection results to generated humanoid [rifigy rigs](https://docs.blender.org/manual/en/latest/addons/rigging/rigify/index.html).
-To transfer, just select the generated humaniod rig as transfer target and press the `Transfer` Button.
-The transfer is based on mapping objects which you can modify. The modifications you can save as own configurations.<br>
+### License and Original Author
+**This project is, and will remain, under its original license: GNU General Public License v3.0.**
 
-You'll find the mapping objects in the collections generated while tracking such as `cgt_HANDS`.
-Mapping instructions are stored as object properties and can be modified in the `object data properties` panel (where the constraints live).
-Here the concept of mapping objects:
+All credit for this incredible tool goes to its original creator, **Denys Hsu (cgtinker)**. We are building upon the foundation they generously provided to the open-source community.
 
-````
-mapping_object: object with instructions and constraints
-driver_object: generated driver based on instructions
-target_object: copies values from driver_object via constraints
-````
+The GPL-3.0 license means this program is free software: you can redistribute it and/or modify it. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
 
-If you happen to create a configuration to support another rig, feel free to send it to me for sharing via hello@cgtinker.com.<br>
+You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-
-# License
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Copyright (C) Denys Hsu - cgtinker, cgtinker.com, hello@cgtinker.com
-
-
-<br><br>
-For tutorials regarding my tools may check out my [YouTube-Channel](https://www.youtube.com/user/MrSerAdos).
-If you want to support me you can become a [Patreon](https://www.patreon.com/cgtinker).
-
+*Original Copyright (C) Denys Hsu - cgtinker, cgtinker.com*
